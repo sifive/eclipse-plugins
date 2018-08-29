@@ -415,8 +415,18 @@ public abstract class PeripheralTreeVMNode implements IRegister, Comparable<Peri
 	public String getDisplayAddress() {
 
 		BigInteger bigAddress = getBigAbsoluteAddress();
+		int addressSize;
+		try {
+			addressSize = getPeripheral().getMemoryBlock().getAddressSize();
+		} catch (DebugException e) {
+			addressSize = 4;
+		}
 		if (bigAddress != null) {
-			return String.format("0x%08X", bigAddress.longValue());
+			if (addressSize <= 4) {
+				return String.format("0x%08X", bigAddress);
+			} else {
+				return String.format("0x%016X", bigAddress);
+			}
 		}
 
 		return null;
