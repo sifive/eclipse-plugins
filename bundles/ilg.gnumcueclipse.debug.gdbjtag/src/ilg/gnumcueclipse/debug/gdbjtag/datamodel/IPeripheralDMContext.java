@@ -49,7 +49,7 @@ public abstract interface IPeripheralDMContext extends IDMContext, Comparable<IP
 	/**
 	 * Get the hex representation of the numerical value.
 	 * 
-	 * @return a string formatted with 0x%08x
+	 * @return a string formatted with 0x%08x or 0x%016x depending on address size.
 	 */
 	public abstract String getHexAddress();
 
@@ -95,6 +95,13 @@ public abstract interface IPeripheralDMContext extends IDMContext, Comparable<IP
 	 * @return true if the peripheral is shown.
 	 */
 	public abstract boolean hasMemoryMonitor();
+	
+	/**
+	 * Set the address size in bits across all peripherals.
+	 * 
+	 * @param value number of bits needed to represent max address
+	 */
+	public abstract void setAddressSize(int value);
 
 	public abstract int compareTo(IPeripheralDMContext obj);
 

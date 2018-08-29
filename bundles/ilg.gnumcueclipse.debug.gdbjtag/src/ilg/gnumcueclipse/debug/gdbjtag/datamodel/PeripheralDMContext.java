@@ -113,6 +113,11 @@ public class PeripheralDMContext extends AbstractDMContext
 	public boolean hasMemoryMonitor() {
 		return fDMNode.isShown();
 	}
+	
+	@Override
+	public void setAddressSize(int value) {
+		fDMNode.setAddressSize(value);
+	}
 
 	/**
 	 * Support function, to forward the action to the service, with more details,
