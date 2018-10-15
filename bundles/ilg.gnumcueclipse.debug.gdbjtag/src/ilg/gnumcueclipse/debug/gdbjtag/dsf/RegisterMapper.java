@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.cdt.dsf.datamodel.DMContexts;
 import org.eclipse.cdt.dsf.datamodel.IDMContext;
@@ -84,7 +85,7 @@ public class RegisterMapper {
     		"ft0","ft1","ft2","ft3","ft4","ft5","ft6","ft7","fs0","fs1","fa0","fa1","fa2","fa3","fa4","fa5","fa6","fa7","fs2","fs3","fs4","fs5","fs6","fs7","fs8","fs9","fs10","fs11","ft8","ft9","ft10","ft11" 
     };
 
-    static HashMap<String, String[]> registerBlocks = new HashMap<>();
+    static Map<String, String[]> registerBlocks = new HashMap<>();
     static {
     	registerBlocks.put("generalregisters", generalRegisters);
     	registerBlocks.put("machineregisters", machineRegisters);
@@ -93,11 +94,11 @@ public class RegisterMapper {
     
 
 
-	static HashMap<IDMContext, HashMap<String, Integer>> contextGdbIndexMap = new HashMap<>();
-	static HashMap<IDMContext, HashMap<Integer, Integer>> contextViewIndexMap = new HashMap<>();
-	static HashMap<IDMContext, ArrayList<String>> contextGdbNameListMap = new HashMap<>();
+	static Map<IDMContext, Map<String, Integer>> contextGdbIndexMap = new HashMap<>();
+	static Map<IDMContext, Map<Integer, Integer>> contextViewIndexMap = new HashMap<>();
+	static Map<IDMContext, List<String>> contextGdbNameListMap = new HashMap<>();
 	
-	static HashMap<String, Integer> getContextGdbIndexMap(IDMContext ctx) {
+	static Map<String, Integer> getContextGdbIndexMap(IDMContext ctx) {
 		if (!contextGdbIndexMap.containsKey(ctx)) {
 			contextGdbIndexMap.put(ctx, new HashMap<>());
 		}
@@ -105,7 +106,7 @@ public class RegisterMapper {
 		return contextGdbIndexMap.get(ctx);
 	}
 
-	static ArrayList<String> getContextGdbNameList(IDMContext ctx) {
+	static List<String> getContextGdbNameList(IDMContext ctx) {
 		if (!contextGdbNameListMap.containsKey(ctx)) {
 			contextGdbNameListMap.put(ctx, new ArrayList<>());
 		}
@@ -113,7 +114,7 @@ public class RegisterMapper {
 		return contextGdbNameListMap.get(ctx);
 	}
 
-	static HashMap<Integer, Integer> getContextViewIndexMap(final IDMContext ctx) {
+	static Map<Integer, Integer> getContextViewIndexMap(final IDMContext ctx) {
 		IDMContext context = DMContexts.getAncestorOfType(ctx, IMIContainerDMContext.class);
 					
 		if (!contextViewIndexMap.containsKey(context)) {
@@ -126,8 +127,8 @@ public class RegisterMapper {
 	static void addGdbRegisterList(IDMContext context, MIOutput output) {
 		MIList milist = (MIList) output.getMIResultRecord().getMIResults()[0].getMIValue();
     	int gdbIndex = 0;
-    	HashMap<String, Integer> gdbIndexMap = getContextGdbIndexMap(context);
-    	ArrayList<String> gdbNameList = getContextGdbNameList(context);
+    	Map<String, Integer> gdbIndexMap = getContextGdbIndexMap(context);
+    	List<String> gdbNameList = getContextGdbNameList(context);
     	for (MIValue v : milist.getMIValues()) {
     		MIConst c = (MIConst) v;
     		gdbIndexMap.put(c.getCString(), gdbIndex++);
@@ -135,9 +136,9 @@ public class RegisterMapper {
     	}
 	}
 
-	static void addViewerRegisterList(IDMContext context, ArrayList<MIValue> mivalues) {
-		HashMap<Integer, Integer> viewIndexMap = getContextViewIndexMap(context);
-		HashMap<String, Integer> gdbIndexMap = getContextGdbIndexMap(context);
+	static void addViewerRegisterList(IDMContext context, List<MIValue> mivalues) {
+		Map<Integer, Integer> viewIndexMap = getContextViewIndexMap(context);
+		Map<String, Integer> gdbIndexMap = getContextGdbIndexMap(context);
 		int viewIndex = 0;
 		for (MIValue v : mivalues) {
 			MIConst c = (MIConst) v;
@@ -150,7 +151,7 @@ public class RegisterMapper {
 
 	static int[] remapViewIndexes(IFrameDMContext context, int[] regnos) {
 		int[] result = new int[regnos.length];
-		HashMap<Integer, Integer> viewIndexMap = getContextViewIndexMap(context);
+		Map<Integer, Integer> viewIndexMap = getContextViewIndexMap(context);
 		int index = 0;
 		for (int i : regnos) {
 			result[index] = viewIndexMap.get(i);
@@ -165,9 +166,9 @@ public class RegisterMapper {
 	
 	private final static StringBuilder errors = new StringBuilder();
 	private static boolean hasErrors = false;
-	private static ArrayList<String> finalList;
+	private static List<String> finalList;
 	
-    static void parseRegisterList(IDMContext context, ArrayList<MIValue> mival, Path filePath) throws IOException {
+    static void parseRegisterList(IDMContext context, List<MIValue> mival, Path filePath) throws IOException {
     	finalList = new ArrayList<>();
     	parseRegisterList(context, mival, filePath, 0);
     }
@@ -181,7 +182,7 @@ public class RegisterMapper {
     /*
      * WARNING: This is a recursive method (to process nested #include directives)
      */
-    private static void parseRegisterList(IDMContext context, ArrayList<MIValue> mival, Path filePath, int level) throws IOException {
+    private static void parseRegisterList(IDMContext context, List<MIValue> mival, Path filePath, int level) throws IOException {
     	if (!Files.isReadable(filePath)) {
     		errors.append("Could not read from file: ");
     		errors.append(filePath);
@@ -216,7 +217,7 @@ public class RegisterMapper {
     		}
     		
     		if (tmp.toLowerCase().contentEquals("gdbregisters")) {
-    			ArrayList<String> gdbNameList = RegisterMapper.getContextGdbNameList(context);
+    			List<String> gdbNameList = RegisterMapper.getContextGdbNameList(context);
     			for (String r : gdbNameList) {
     				addRegister(r);
     			}
@@ -240,7 +241,7 @@ public class RegisterMapper {
     	/*
     	 * Dont do this until the very end.
     	 */
-    	HashMap<String, Integer> existingRegisters = RegisterMapper.getContextGdbIndexMap(context);
+    	Map<String, Integer> existingRegisters = RegisterMapper.getContextGdbIndexMap(context);
     	
     	for (String tmp : finalList) {
     		/*
@@ -276,7 +277,7 @@ public class RegisterMapper {
     	}
 	}
 
-	static void addList(ArrayList<MIValue> mival, String[] regnames) {
+	static void addList(List<MIValue> mival, String[] regnames) {
     	for (String regname : regnames) {
     		MIConst c = new MIConst();
     		c.setCString(regname);
