@@ -25,11 +25,11 @@ public class GnuMcuCommandFactory extends CommandFactory_6_8 {
 	// ------------------------------------------------------------------------
 	
 	public ICommand<MIDataListRegisterNamesInfo> createMIDataListRegisterNames(IContainerDMContext ctx) {
-		return new MIDataListRegisterNamesInfoEx(ctx);
+		return new MIDataListRegisterNamesEx(ctx);
 	}
 
 	public ICommand<MIDataListRegisterNamesInfo> createMIDataListRegisterNames(IContainerDMContext ctx, int [] regnos) {
-		return new MIDataListRegisterNamesInfoEx(ctx, regnos);
+		return new MIDataListRegisterNamesEx(ctx, regnos);
 	}
 
 	@Override
