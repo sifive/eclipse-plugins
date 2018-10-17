@@ -177,10 +177,16 @@ public class PeripheralsService extends AbstractDsfService implements IPeriphera
 			parents = new IDMContext[0];
 		}
 		int i = 0;
+		int addressSize = 32;
 		for (Leaf child : list) {
 			PeripheralDMNode node = new PeripheralDMNode(child);
+			addressSize = Math.max(addressSize, node.getBigAbsoluteAddress().bitLength());
 			contexts[i] = new PeripheralDMContext(getSession(), parents, node);
 			++i;
+		}
+		// Updating all peripherals with max address size across all peripherals
+		for (PeripheralDMContext context : contexts) {
+			context.setAddressSize(addressSize);
 		}
 		Arrays.sort(contexts);
 		return contexts;

@@ -12,6 +12,8 @@
 
 package ilg.gnumcueclipse.debug.gdbjtag.datamodel;
 
+import java.math.BigInteger;
+
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.debug.core.model.IMemoryBlockExtension;
 
@@ -28,6 +30,8 @@ public class PeripheralDMNode extends SvdPeripheralDMNode implements IAdaptable 
 
 	private IMemoryBlockExtension fMemoryBlock;
 	private boolean fIsChecked;
+	private int fAddressSize;
+	private String fHexAbsoluteAddress;
 
 	// ------------------------------------------------------------------------
 
@@ -37,6 +41,8 @@ public class PeripheralDMNode extends SvdPeripheralDMNode implements IAdaptable 
 
 		fMemoryBlock = null;
 		fIsChecked = true;
+		fAddressSize = 32;
+		fHexAbsoluteAddress = null;
 	}
 
 	public void dispose() {
@@ -78,6 +84,32 @@ public class PeripheralDMNode extends SvdPeripheralDMNode implements IAdaptable 
 
 	public void setChecked(boolean flag) {
 		fIsChecked = flag;
+	}
+	
+	public void setAddressSize(int value) {
+		fAddressSize = value;
+	}
+	
+	/**
+	 * Get the address formatted as a (8 or 16 digit) fixed size hex string.
+	 * <p>
+	 * Also used as peripheral ID.
+	 * 
+	 * @return a string with the "%08X" or "%016X" formatted value.
+	 */
+	@Override
+	public String getHexAddress() {
+
+		if (fHexAbsoluteAddress == null) {
+			BigInteger bigAddress = getBigAbsoluteAddress();
+			if (fAddressSize <= 32) {
+				fHexAbsoluteAddress = String.format("0x%08X", bigAddress);
+			} else {
+				fHexAbsoluteAddress = String.format("0x%016X", bigAddress);
+			}
+		}
+
+		return fHexAbsoluteAddress;
 	}
 
 	// ------------------------------------------------------------------------

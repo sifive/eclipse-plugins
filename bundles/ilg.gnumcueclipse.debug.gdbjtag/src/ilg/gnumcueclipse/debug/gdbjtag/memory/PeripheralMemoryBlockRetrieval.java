@@ -14,16 +14,23 @@ package ilg.gnumcueclipse.debug.gdbjtag.memory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import org.eclipse.cdt.dsf.concurrent.DataRequestMonitor;
+import org.eclipse.cdt.dsf.concurrent.Query;
 import org.eclipse.cdt.dsf.datamodel.DMContexts;
 import org.eclipse.cdt.dsf.datamodel.IDMContext;
 import org.eclipse.cdt.dsf.debug.model.DsfMemoryBlockRetrieval;
 import org.eclipse.cdt.dsf.debug.service.IMemory;
 import org.eclipse.cdt.dsf.debug.service.IMemory.IMemoryDMContext;
 import org.eclipse.cdt.dsf.debug.service.IRunControl.IExitedDMEvent;
+import org.eclipse.cdt.dsf.debug.service.command.ICommandControl;
 import org.eclipse.cdt.dsf.gdb.internal.GdbPlugin;
 import org.eclipse.cdt.dsf.internal.DsfPlugin;
+import org.eclipse.cdt.dsf.mi.service.IMICommandControl;
+import org.eclipse.cdt.dsf.mi.service.command.CommandFactory;
 import org.eclipse.cdt.dsf.service.DsfServiceEventHandler;
+import org.eclipse.cdt.dsf.service.DsfServicesTracker;
 import org.eclipse.cdt.dsf.service.DsfSession;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -42,6 +49,8 @@ import org.w3c.dom.NodeList;
 
 import ilg.gnumcueclipse.debug.gdbjtag.Activator;
 import ilg.gnumcueclipse.debug.gdbjtag.datamodel.PeripheralDMContext;
+import ilg.gnumcueclipse.debug.gdbjtag.dsf.GnuMcuCommandFactory;
+import ilg.gnumcueclipse.debug.gdbjtag.services.IPeripheralMemoryService;
 
 @SuppressWarnings("restriction")
 public class PeripheralMemoryBlockRetrieval extends DsfMemoryBlockRetrieval {
@@ -83,6 +92,7 @@ public class PeripheralMemoryBlockRetrieval extends DsfMemoryBlockRetrieval {
 
 	public void initialize(final IMemoryDMContext memoryCtx) {
 		super.initialize(memoryCtx);
+		fMemoryContext = memoryCtx;
 	}
 
 	public List<String> getPersistentPeripherals() {
@@ -286,4 +296,77 @@ public class PeripheralMemoryBlockRetrieval extends DsfMemoryBlockRetrieval {
 	}
 
 	// ------------------------------------------------------------------------
+	
+	@SuppressWarnings("unused")
+	private GnuMcuCommandFactory fCommandFactory;
+	@SuppressWarnings("unused")
+	private ICommandControl fCommandControl;
+	private IPeripheralMemoryService fMemoryService;
+	private IMemoryDMContext fMemoryContext;
+	private int fMemoryAddressSize;
+	private boolean fMemoryAddressSizeInitialized;
+
+	@Override
+	public int getAddressSize() {
+		if (fMemoryAddressSizeInitialized) {
+			return fMemoryAddressSize;
+		}
+
+		// BEGIN: *** Copied from PeripheralMemoryBlockExtension ***
+		String sessionId = getSession().getId();
+		final DsfServicesTracker tracker = new DsfServicesTracker(
+				Activator.getInstance().getBundle().getBundleContext(), sessionId);
+
+		@SuppressWarnings("rawtypes")
+		Query query = new Query() {
+
+			@Override
+			protected void execute(DataRequestMonitor rm) {
+
+				fCommandControl = (ICommandControl) tracker.getService((Class<ICommandControl>) ICommandControl.class);
+
+				CommandFactory commandFactory = ((IMICommandControl) tracker
+						.getService((Class<IMICommandControl>) IMICommandControl.class)).getCommandFactory();
+				if (commandFactory instanceof GnuMcuCommandFactory) {
+					fCommandFactory = (GnuMcuCommandFactory) commandFactory;
+				} else {
+					Activator.log("Error: unknown command factory:" + commandFactory.getClass().getSimpleName());
+				}
+
+				// Get the memory service.
+				fMemoryService = (IPeripheralMemoryService) tracker.getService(IPeripheralMemoryService.class);
+
+				if (fMemoryService == null) {
+					Activator.log("Error: cannot get IPeripheralMemoryService");
+				}
+
+				rm.done();
+			}
+
+		};
+		getExecutor().execute(query);
+		try {
+			query.get();
+			if (Activator.getInstance().isDebugging()) {
+				System.out.println("memory service data initialised");
+			}
+		} catch (InterruptedException e) {
+			;
+		} catch (ExecutionException e) {
+			;
+		}
+		// END: *** Copied from PeripheralMemoryBlockExtension ***
+
+		// Decide what size is the address
+		fMemoryAddressSize = fMemoryService.getAddressSize(fMemoryContext);
+		fMemoryAddressSizeInitialized = true;
+		fMemoryContext = null;
+		fMemoryService = null;
+		fCommandFactory = null;
+		fCommandControl = null;
+		tracker.dispose();
+		
+		return fMemoryAddressSize;
+	}
+
 }
