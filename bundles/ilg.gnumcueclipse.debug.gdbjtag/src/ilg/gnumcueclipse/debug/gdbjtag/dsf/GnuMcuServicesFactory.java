@@ -11,6 +11,7 @@
 
 package ilg.gnumcueclipse.debug.gdbjtag.dsf;
 
+import org.eclipse.cdt.dsf.debug.service.IMemory;
 import org.eclipse.cdt.dsf.debug.service.IProcesses;
 import org.eclipse.cdt.dsf.debug.service.command.ICommandControl;
 import org.eclipse.cdt.dsf.gdb.service.GdbDebugServicesFactory;
@@ -127,6 +128,11 @@ public abstract class GnuMcuServicesFactory extends GdbDebugServicesFactory {
 		}
 
 		return super.createProcessesService(session);
+	}
+
+	@Override
+	protected IMemory createMemoryService(DsfSession session) {
+		return new SiFiveMemory(session);
 	}
 
 	// Not yet functional

@@ -1,4 +1,4 @@
-package ilg.gnumcueclipse.debug.gdbjtag.openocd.dsf;
+package ilg.gnumcueclipse.debug.gdbjtag.dsf;
 
 import org.eclipse.cdt.core.IAddress;
 import org.eclipse.cdt.dsf.concurrent.DataRequestMonitor;

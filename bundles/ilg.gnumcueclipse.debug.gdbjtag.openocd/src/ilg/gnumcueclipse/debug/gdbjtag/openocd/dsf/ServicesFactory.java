@@ -57,9 +57,5 @@ public class ServicesFactory extends GnuMcuServicesFactory {
 		return new DebuggerCommands(session, lc, mode);
 	}
 
-	@Override
-	protected IMemory createMemoryService(DsfSession session) {
-		return new SiFiveMemory(session);
-	}
 	// ------------------------------------------------------------------------
 }
