@@ -11,14 +11,15 @@
 
 package ilg.gnumcueclipse.debug.gdbjtag.openocd.dsf;
 
+import org.eclipse.cdt.dsf.debug.service.IMemory;
+import org.eclipse.cdt.dsf.mi.service.IMIBackend;
+import org.eclipse.cdt.dsf.service.DsfSession;
+import org.eclipse.debug.core.ILaunchConfiguration;
+
 import ilg.gnumcueclipse.debug.gdbjtag.dsf.GnuMcuDebuggerCommandsService;
 import ilg.gnumcueclipse.debug.gdbjtag.dsf.GnuMcuGdbServerBackend;
 import ilg.gnumcueclipse.debug.gdbjtag.dsf.GnuMcuServicesFactory;
 import ilg.gnumcueclipse.debug.gdbjtag.openocd.Activator;
-
-import org.eclipse.cdt.dsf.mi.service.IMIBackend;
-import org.eclipse.cdt.dsf.service.DsfSession;
-import org.eclipse.debug.core.ILaunchConfiguration;
 
 public class ServicesFactory extends GnuMcuServicesFactory {
 
