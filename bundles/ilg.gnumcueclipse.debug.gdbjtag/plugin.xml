@@ -147,7 +147,39 @@
 			id="ilg.gnumcueclipse.debug.gdbjtag.jlink.preferencePage.peripherals"
 			name="%preferences.peripherals">
 		</page>
+		<page
+			category="ilg.gnumcueclipse.core.ui.preferences.mcu"
+			class="ilg.gnumcueclipse.debug.gdbjtag.preferences.WorkspaceRegisterListPage"
+			id="ilg.gnumcueclipse.debug.gdbjtag.workspaceRegisterListPreferencePage"
+			name="%preferences.workspaceRegisterList">
+		</page>
+		<page
+			category="ilg.gnumcueclipse.core.ui.preferences.mcu"
+			class="ilg.gnumcueclipse.debug.gdbjtag.preferences.GlobalRegisterListPage"
+			id="ilg.gnumcueclipse.debug.gdbjtag.globalRegisterListPreferencePage"
+			name="%preferences.globalRegisterList">
+		</page>
 	</extension>
 
+	<extension point="org.eclipse.ui.propertyPages">
+		<page
+			category="ilg.gnumcueclipse.core.ui.properties.mcu"
+			class="ilg.gnumcueclipse.debug.gdbjtag.ui.properties.ProjectRegisterListPage"
+			id="ilg.gnumcueclipse.debug.gdbjtag.projectRegisterListPropertiesPage"
+			name="%properties.registerlist">
+			<filter
+				name="projectNature"
+				value="org.eclipse.cdt.core.cnature">
+			</filter>
+			<enabledWhen>
+				<and>
+					<instanceof value="org.eclipse.core.resources.IProject">
+					</instanceof>
+					<test forcePluginActivation="true" property="ilg.gnumcueclipse.managedbuild.cross.isGnuMcu">
+					</test>
+				</and>
+			</enabledWhen>
+		</page>
+	</extension>
 
 </plugin>

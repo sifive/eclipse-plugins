@@ -23,5 +23,10 @@ public interface ConfigurationAttributes {
 
 	public static final String SVD_PATH = PREFIX + ".svdPath"; //$NON-NLS-1$
 
+	// TabDebuggerConfig
+	
+	public static final String ATTR_REGISTER_LIST_EXPR = PREFIX + ".RegisterListExpr"; //$NON-NLS-1$
+	
+
 	// ------------------------------------------------------------------------
 }

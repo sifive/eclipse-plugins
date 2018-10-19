@@ -19,6 +19,9 @@ public class PersistentPreferences extends ilg.gnumcueclipse.core.preferences.Pe
 	public static final String EXECUTABLE_NAME = "executable.name";
 	public static final String EXECUTABLE_NAME_DEFAULT = "";
 
+	public static final String REGISTER_LIST = "register.list";
+	public static final String REGISTER_LIST_DEFAULT = "";
+
 	public static final String INSTALL_FOLDER = "install.folder";
 	public static final String INSTALL_FOLDER_DEFAULT = "";
 
@@ -75,6 +78,12 @@ public class PersistentPreferences extends ilg.gnumcueclipse.core.preferences.Pe
 
 	public boolean getPeripheralsChangedUseFadingBackground() {
 		return getBoolean(PERIPHERALS_CHANGED_USE_FADING_BACKGROUND, PERIPHERALS_CHANGED_USE_FADING_BACKGROUND_DEFAULT);
+	}
+
+	// ----- Executable name ------------------------------------------
+	public String getRegisterListFile() {
+
+		return getString(REGISTER_LIST, REGISTER_LIST_DEFAULT);
 	}
 
 	// ------------------------------------------------------------------------

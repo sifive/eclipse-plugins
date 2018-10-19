@@ -703,5 +703,39 @@ public class DebugUtils {
 		return 0;
 	}
 
+	public static String constructExpr(final String str, ILaunchConfiguration launchConfig) {
+		try {
+			String result = str;
+			String wsLoc = VariablesPlugin.getDefault().getStringVariableManager().getDynamicVariable("workspace_loc").getValue(null);
+			if (str.contains(wsLoc)) {
+				result = str.replace(wsLoc, "${workspace_loc}");
+				System.out.println(result);
+				System.out.println(resolveAll(result, launchConfig));
+			}
+			
+			return result;
+		} catch (CoreException e1) {
+			return e1.getMessage();
+		}
+	}
+
+	public static String resolveAll(String str, ILaunchConfiguration configuration) throws CoreException {
+		String value = str;
+		value = value.trim();
+		if (value.length() == 0)
+			return null;
+
+		if (value.indexOf("${") >= 0) {
+			// If more macros to process.
+			value = DebugUtils.resolveAll(value, configuration.getAttributes());
+
+			ICConfigurationDescription buildConfig = EclipseUtils.getBuildConfigDescription(configuration);
+			if (buildConfig != null) {
+				value = DebugUtils.resolveAll(value, buildConfig);
+			}
+		}
+		return value;
+	}
+
 	// ------------------------------------------------------------------------
 }
