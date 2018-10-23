@@ -13,7 +13,6 @@ Export-Package: com.github.zafarkhaja.semver,
  ilg.gnumcueclipse.core,
  ilg.gnumcueclipse.core.preferences,
  ilg.gnumcueclipse.core.ui,
- ilg.gnumcueclipse.sifive.util,
  liqp,
  org.json.simple,
  org.json.simple.parser
