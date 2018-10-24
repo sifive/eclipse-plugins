@@ -1,5 +1,7 @@
 package ilg.gnumcueclipse.debug.gdbjtag.dsf;
 
+import java.lang.reflect.Method;
+
 import org.eclipse.cdt.core.IAddress;
 import org.eclipse.cdt.dsf.concurrent.DataRequestMonitor;
 import org.eclipse.cdt.dsf.concurrent.IDsfStatusConstants;
@@ -10,10 +12,23 @@ import org.eclipse.cdt.dsf.gdb.service.GDBMemory_7_6;
 import org.eclipse.cdt.dsf.gdb.service.IGDBProcesses;
 import org.eclipse.cdt.dsf.mi.service.IMIContainerDMContext;
 import org.eclipse.cdt.dsf.mi.service.IMIExecutionDMContext;
+import org.eclipse.cdt.dsf.mi.service.command.output.MIExecAsyncOutput;
+import org.eclipse.cdt.dsf.mi.service.command.output.MIOOBRecord;
+import org.eclipse.cdt.dsf.mi.service.command.output.MIOutput;
 import org.eclipse.cdt.dsf.service.DsfSession;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.model.MemoryByte;
+import org.eclipse.debug.ui.IDebugUIConstants;
+import org.eclipse.debug.ui.memory.IMemoryRendering;
+import org.eclipse.debug.ui.memory.IMemoryRenderingContainer;
+import org.eclipse.debug.ui.memory.IMemoryRenderingSite;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 @SuppressWarnings("restriction")
 public class SiFiveMemory extends GDBMemory_7_6 {
@@ -96,4 +111,91 @@ public class SiFiveMemory extends GDBMemory_7_6 {
 		 */
     	getMemoryCache(memoryDMC).getMemory(memoryDMC, address.add(offset), wordSize, wordCount, drm);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.cdt.dsf.gdb.service.GDBMemory_7_6#eventReceived(java.lang.Object)
+	 */
+	@Override
+	public void eventReceived(Object output) {
+		if (output instanceof MIOutput) {
+			MIOOBRecord[] records = ((MIOutput)output).getMIOOBRecords();
+			for (MIOOBRecord r : records) {
+				if (r instanceof MIExecAsyncOutput) {
+					MIExecAsyncOutput execOutput = (MIExecAsyncOutput)r;
+					String asyncClass = execOutput.getAsyncClass();
+					if ("running".equals(asyncClass)) { //$NON-NLS-1$
+						// State changed to running, so we want to force a refresh
+						refreshWorkbenchMemoryViewRenderings();
+					}
+//					else if ("stopped".equals(asyncClass)) { //$NON-NLS-1$
+//						// State changed to stopped, so we want to force a refresh
+//						refreshAllMemoryViewRenderings();
+//					}
+				}
+			}
+		}
+		
+		// Let the super class get the event as well
+		super.eventReceived(output);
+	}
+	
+	/**
+	 * Iterate through all memory views in the workbench and call refresh on all renderings
+	 */
+	private void refreshWorkbenchMemoryViewRenderings() {
+		if (PlatformUI.isWorkbenchRunning()) {
+			IWorkbench workbench = PlatformUI.getWorkbench();
+			IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
+			for (IWorkbenchWindow window : windows) {
+				IWorkbenchPage[] pages = window.getPages();
+				for (IWorkbenchPage page : pages) {
+					IViewReference[] references = page.getViewReferences();
+					for (IViewReference reference : references) {
+						refreshMemoryViewReferenceRenderings(reference);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Call refresh on all renderings for memory view reference
+	 * @param reference
+	 */
+	private void refreshMemoryViewReferenceRenderings(IViewReference reference) {
+		if (reference.getId().equals(IDebugUIConstants.ID_MEMORY_VIEW)) {
+			IViewPart part = reference.getView(false);
+			if (part instanceof IMemoryRenderingSite) {
+				IMemoryRenderingSite site = (IMemoryRenderingSite)part;
+				IMemoryRenderingContainer[] containers = site.getMemoryRenderingContainers();
+				for (IMemoryRenderingContainer container : containers) {
+					IMemoryRendering[] renderings = container.getRenderings();
+					for (IMemoryRendering rendering : renderings) {
+						refreshMemoryViewRendering(part, rendering);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Call refresh on memory rendering in UI thread
+	 * @param part
+	 * @param rendering
+	 */
+	private void refreshMemoryViewRendering(IViewPart part, IMemoryRendering rendering) {
+		part.getViewSite().getShell().getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Method method = rendering.getClass().getMethod("refresh");
+					method.invoke(rendering);
+					//System.out.println("Refreshing memory rendering: " + rendering);
+				} catch (Exception e) {
+					//System.out.println("Not refreshing memory rendering: " + rendering);
+				}
+			}
+		});
+	}
+	
 }
