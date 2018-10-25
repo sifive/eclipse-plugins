@@ -54,8 +54,6 @@ public class MIDataListRegisterNamesEx extends MIDataListRegisterNames  {
 			}
     		
 		}
-
-    	
     	
     	ArrayList<MIValue> mivalues = new ArrayList<>();
     	
@@ -72,7 +70,7 @@ public class MIDataListRegisterNamesEx extends MIDataListRegisterNames  {
     			System.out.println(e.getMessage());
     		}
     		System.out.println("Using default embedded register list");
-    		RegisterMapper.addList(mivalues, RegisterMapper.generalRegisters);
+    		RegisterMapper.useDefaultList(getContext(), mivalues);
     	}
     	
     	RegisterMapper.addViewerRegisterList(getContext(), mivalues);
