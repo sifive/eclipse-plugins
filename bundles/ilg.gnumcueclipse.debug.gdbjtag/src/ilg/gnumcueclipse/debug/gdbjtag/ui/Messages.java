@@ -36,6 +36,12 @@ public class Messages extends NLS {
 	public static String PeripheralsPreferencePage_changedMediumColor_label;
 	public static String PeripheralsPreferencePage_changedLightColor_label;
 
+	public static String GlobalRegisterListPagePropertyPage_description;
+	public static String WorkspaceRegisterListPagePropertyPage_description;
+	public static String RegisterListPage_file_label;
+	
+	public static String ProjectRegisterListPagePropertyPage_description;
+	
 	public static String PeripheralsPreferencePage_useFadingBackground_label;
 
 	public static String AddMemoryBlockAction_title;
@@ -54,6 +60,13 @@ public class Messages extends NLS {
 	public static String TabSvd_label_tooltip;
 	public static String TabSvd_button_Browse_text;
 	public static String TabSvd_button_Variables_text;
+
+	public static String TabConfig_registerList_browse_title;
+	public static String TabConfig_registerlist_group_text;
+	public static String TabConfig_registerlist_label_text;
+	public static String TabConfig_registerlist_button_Browse_text;
+	public static String TabConfig_registerlist_button_Variables_text;
+	public static String TabConfig_registerlist_path_text;
 
 	static {
 		// initialise above static strings
