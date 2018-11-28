@@ -79,6 +79,34 @@ public class PersistentPreferences {
 		return defaultValue;
 	}
 
+	public static String getPreferenceScopeForId(String pluginId, String key,
+			IScopeContext[] contexts) {
+
+		String value = null;
+		String from = null;
+		for (int i = 0; i < contexts.length; ++i) {
+			value = contexts[i].getNode(pluginId).get(key, null);
+
+			if (value != null) {
+				value = value.trim();
+
+				if (!value.isEmpty()) {
+					from = contexts[i].getName();
+					switch (from) {
+					case "configuration":
+						return "global";
+					case "instance":
+						return "workspace";
+					case "project":
+						return "project";
+					}
+				}
+			}
+		}
+
+		return "default";
+	}
+
 	/**
 	 * Compute a maximum array of scopes where to search for.
 	 * 
@@ -117,6 +145,13 @@ public class PersistentPreferences {
 
 		IScopeContext[] contexts = getPreferenceScopeContexts(project);
 		return getPreferenceValueForId(pluginId, key, defaultValue, contexts);
+	}
+
+
+	public static String getPreferenceScopeForId(String pluginId, String key, IProject project) {
+
+		IScopeContext[] contexts = getPreferenceScopeContexts(project);
+		return getPreferenceScopeForId(pluginId, key, contexts);
 	}
 
 	// ------------------------------------------------------------------------
