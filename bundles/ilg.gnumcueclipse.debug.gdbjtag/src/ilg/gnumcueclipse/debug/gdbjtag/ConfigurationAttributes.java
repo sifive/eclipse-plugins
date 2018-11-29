@@ -27,6 +27,7 @@ public interface ConfigurationAttributes {
 	
 	public static final String ATTR_REGISTER_LIST_EXPR = PREFIX + ".RegisterListExpr"; //$NON-NLS-1$
 	public static final String ATTR_HW_BREAKPOINT_LIMIT = PREFIX + ".HwBreakpointLimit"; //$NON-NLS-1$
+	public static final String ATTR_HW_BREAKPOINT_ACTUAL = PREFIX + ".HwBreakpointActual"; //$NON-NLS-1$
 
 	// ------------------------------------------------------------------------
 }

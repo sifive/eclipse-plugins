@@ -230,6 +230,7 @@ public class TabDebugConfig extends AbstractLaunchConfigurationTab {
 					}
 					
 					if (ret == Window.OK) {
+						scheduleUpdateJob();
 						updateActualHwBreakpointLimit();
 					}
 				}
@@ -354,6 +355,14 @@ public class TabDebugConfig extends AbstractLaunchConfigurationTab {
 		
 		temp = fHwBreakpointLimitText.getText().trim();
 		configuration.setAttribute(ConfigurationAttributes.ATTR_HW_BREAKPOINT_LIMIT, temp);
+		if (!temp.isEmpty()) {
+			configuration.setAttribute(ConfigurationAttributes.ATTR_HW_BREAKPOINT_ACTUAL, temp);
+		}
+		else {
+			temp = PersistentPreferences.getPreferenceValueForId(Activator.PLUGIN_ID, PersistentPreferences.HW_BP_LIMIT, 
+					PersistentPreferences.HW_BP_LIMIT_DEFAULT, EclipseUtils.getProjectByLaunchConfiguration(fConfiguration)); 
+			configuration.setAttribute(ConfigurationAttributes.ATTR_HW_BREAKPOINT_ACTUAL, temp);
+		}
 	}
 
 	@Override

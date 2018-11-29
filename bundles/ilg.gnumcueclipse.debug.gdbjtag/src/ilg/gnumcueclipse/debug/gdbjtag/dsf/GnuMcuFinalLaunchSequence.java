@@ -269,8 +269,7 @@ public class GnuMcuFinalLaunchSequence extends GDBJtagDSFFinalLaunchSequence {
 
 		final List<String> commandsList = new ArrayList<String>();
 
-		String hwBreakpointLimit = CDebugUtils.getAttribute(fAttributes, ConfigurationAttributes.ATTR_HW_BREAKPOINT_LIMIT,
-				PersistentPreferences.HW_BP_LIMIT_DEFAULT).trim();
+		String hwBreakpointLimit = CDebugUtils.getAttribute(fAttributes, ConfigurationAttributes.ATTR_HW_BREAKPOINT_ACTUAL,"").trim();
 		if (!hwBreakpointLimit.isEmpty()) {
 			StringBuilder sb = new StringBuilder("set remote hardware-breakpoint-limit ");
 			if (hwBreakpointLimit.equals("-1")) {

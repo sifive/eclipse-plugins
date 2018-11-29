@@ -147,6 +147,12 @@ public class PersistentPreferences {
 		return getPreferenceValueForId(pluginId, key, defaultValue, contexts);
 	}
 
+	public static String getPreferenceValueForId(String pluginId, String key, String defaultValue) {
+
+		IScopeContext[] contexts = getPreferenceScopeContexts(null);
+		return getPreferenceValueForId(pluginId, key, defaultValue, contexts);
+	}
+
 
 	public static String getPreferenceScopeForId(String pluginId, String key, IProject project) {
 
