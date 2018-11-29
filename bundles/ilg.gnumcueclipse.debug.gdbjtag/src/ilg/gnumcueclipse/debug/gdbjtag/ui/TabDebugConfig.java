@@ -353,9 +353,6 @@ public class TabDebugConfig extends AbstractLaunchConfigurationTab {
 		configuration.setAttribute(ConfigurationAttributes.ATTR_REGISTER_LIST_EXPR, temp);
 		
 		temp = fHwBreakpointLimitText.getText().trim();
-		if (temp.isEmpty()) {
-			temp = PersistentPreferences.getPreferenceValueForId(Activator.PLUGIN_ID, PersistentPreferences.HW_BP_LIMIT, PersistentPreferences.HW_BP_LIMIT_DEFAULT, EclipseUtils.getProjectByLaunchConfiguration(fConfiguration));
-		}
 		configuration.setAttribute(ConfigurationAttributes.ATTR_HW_BREAKPOINT_LIMIT, temp);
 	}
 
