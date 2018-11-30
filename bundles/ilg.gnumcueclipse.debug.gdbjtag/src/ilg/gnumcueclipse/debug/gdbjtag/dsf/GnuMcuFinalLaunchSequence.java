@@ -33,6 +33,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
 
+import ilg.gnumcueclipse.core.EclipseUtils;
 import ilg.gnumcueclipse.debug.gdbjtag.Activator;
 import ilg.gnumcueclipse.debug.gdbjtag.ConfigurationAttributes;
 import ilg.gnumcueclipse.debug.gdbjtag.DebugUtils;
@@ -269,7 +270,16 @@ public class GnuMcuFinalLaunchSequence extends GDBJtagDSFFinalLaunchSequence {
 
 		final List<String> commandsList = new ArrayList<String>();
 
-		String hwBreakpointLimit = CDebugUtils.getAttribute(fAttributes, ConfigurationAttributes.ATTR_HW_BREAKPOINT_ACTUAL,"").trim();
+		String hwBreakpointLimit = CDebugUtils.getAttribute(fAttributes, ConfigurationAttributes.ATTR_HW_BREAKPOINT_LIMIT,"").trim();
+		if (hwBreakpointLimit.isEmpty()) {
+			/*
+			 * Fetch the preference/property/default value 
+			 */
+			GdbLaunch launch = ((GdbLaunch) this.fSession.getModelAdapter(ILaunch.class));
+			hwBreakpointLimit = PersistentPreferences.getPreferenceValueForId(Activator.PLUGIN_ID, 
+					PersistentPreferences.HW_BP_LIMIT, PersistentPreferences.HW_BP_LIMIT_DEFAULT,
+					EclipseUtils.getProjectByLaunchConfiguration(launch.getLaunchConfiguration()));
+		}
 		if (!hwBreakpointLimit.isEmpty()) {
 			StringBuilder sb = new StringBuilder("set remote hardware-breakpoint-limit ");
 			if (hwBreakpointLimit.equals("-1")) {
