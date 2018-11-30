@@ -11,6 +11,8 @@
 
 package ilg.gnumcueclipse.debug.gdbjtag.preferences;
 
+import ilg.gnumcueclipse.debug.gdbjtag.ui.Messages;
+
 public class PersistentPreferences extends ilg.gnumcueclipse.core.preferences.PersistentPreferences {
 
 	// ------------------------------------------------------------------------
@@ -22,6 +24,11 @@ public class PersistentPreferences extends ilg.gnumcueclipse.core.preferences.Pe
 	public static final String REGISTER_LIST = "register.list";
 	public static final String REGISTER_LIST_DEFAULT = "";
 
+	public static final String HW_BP_LIMIT = "hw.breakpoint.limit";
+	public static final String HW_BP_LIMIT_DEFAULT = "2";
+	public static final String HW_BP_LIMIT_UNLIMITED = Messages.HwBreakpointLimitUnlimited;
+	public static final String HW_BP_LIMIT_NONE = Messages.HwBreakpointLimitNone;
+	
 	public static final String INSTALL_FOLDER = "install.folder";
 	public static final String INSTALL_FOLDER_DEFAULT = "";
 
@@ -84,6 +91,25 @@ public class PersistentPreferences extends ilg.gnumcueclipse.core.preferences.Pe
 	public String getRegisterListFile() {
 
 		return getString(REGISTER_LIST, REGISTER_LIST_DEFAULT);
+	}
+
+	public static String subTokens(String source, String tokenN, String tokenS) {
+		return source.replaceAll("NNN", tokenN)
+				.replaceAll("TOK_U", HW_BP_LIMIT_UNLIMITED)
+				.replaceAll("TOK_0", HW_BP_LIMIT_NONE)
+				.replaceAll("TOK_SCOPE", tokenS);
+	}
+	
+	public static String subTokens(String source, String tokenN) {
+		return source.replaceAll("NNN", tokenN)
+				.replaceAll("TOK_U", HW_BP_LIMIT_UNLIMITED)
+				.replaceAll("TOK_0", HW_BP_LIMIT_NONE);
+	}
+
+	public static String subTokens(String source) {
+		return source
+				.replaceAll("TOK_U", HW_BP_LIMIT_UNLIMITED)
+				.replaceAll("TOK_0", HW_BP_LIMIT_NONE);
 	}
 
 	// ------------------------------------------------------------------------

@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.cdt.debug.core.CDebugUtils;
 import org.eclipse.cdt.debug.gdbjtag.core.GDBJtagDSFFinalLaunchSequence;
 import org.eclipse.cdt.debug.gdbjtag.core.jtagdevice.DefaultGDBJtagDeviceImpl;
 import org.eclipse.cdt.debug.gdbjtag.core.jtagdevice.IGDBJtagDevice;
@@ -32,8 +33,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
 
+import ilg.gnumcueclipse.core.EclipseUtils;
 import ilg.gnumcueclipse.debug.gdbjtag.Activator;
+import ilg.gnumcueclipse.debug.gdbjtag.ConfigurationAttributes;
 import ilg.gnumcueclipse.debug.gdbjtag.DebugUtils;
+import ilg.gnumcueclipse.debug.gdbjtag.preferences.PersistentPreferences;
 import ilg.gnumcueclipse.debug.gdbjtag.services.IGnuMcuDebuggerCommandsService;
 import ilg.gnumcueclipse.debug.gdbjtag.services.IPeripheralMemoryService;
 import ilg.gnumcueclipse.debug.gdbjtag.services.IPeripheralsService;
@@ -266,6 +270,30 @@ public class GnuMcuFinalLaunchSequence extends GDBJtagDSFFinalLaunchSequence {
 
 		final List<String> commandsList = new ArrayList<String>();
 
+		String hwBreakpointLimit = CDebugUtils.getAttribute(fAttributes, ConfigurationAttributes.ATTR_HW_BREAKPOINT_LIMIT,"").trim();
+		if (hwBreakpointLimit.isEmpty()) {
+			/*
+			 * Fetch the preference/property/default value 
+			 */
+			GdbLaunch launch = ((GdbLaunch) this.fSession.getModelAdapter(ILaunch.class));
+			hwBreakpointLimit = PersistentPreferences.getPreferenceValueForId(Activator.PLUGIN_ID, 
+					PersistentPreferences.HW_BP_LIMIT, PersistentPreferences.HW_BP_LIMIT_DEFAULT,
+					EclipseUtils.getProjectByLaunchConfiguration(launch.getLaunchConfiguration()));
+		}
+		if (!hwBreakpointLimit.isEmpty()) {
+			StringBuilder sb = new StringBuilder("set remote hardware-breakpoint-limit ");
+			if (hwBreakpointLimit.equals("-1")) {
+				sb.append(PersistentPreferences.HW_BP_LIMIT_UNLIMITED);
+			}
+			else if (hwBreakpointLimit.equals(PersistentPreferences.HW_BP_LIMIT_NONE)) {
+				sb.append("0");
+			}
+			else {
+				sb.append(hwBreakpointLimit);
+			}
+			commandsList.add(sb.toString());
+		}
+		
 		IStatus status = fDebuggerCommands.addGdbInitCommandsCommands(commandsList);
 		if (!status.isOK()) {
 			rm.setStatus(status);

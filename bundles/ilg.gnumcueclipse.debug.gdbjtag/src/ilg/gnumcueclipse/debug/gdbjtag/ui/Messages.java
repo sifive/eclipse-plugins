@@ -41,7 +41,13 @@ public class Messages extends NLS {
 	public static String RegisterListPage_file_label;
 	
 	public static String ProjectRegisterListPagePropertyPage_description;
+
+	public static String GlobalHwBreakpointLimitPagePropertyPage_description;
+	public static String WorkspaceHwBreakpointLimitPagePropertyPage_description;
+	public static String HwBreakpointLimitLabel;
 	
+	public static String ProjectHwBreakpointLimitPagePropertyPage_description;
+
 	public static String PeripheralsPreferencePage_useFadingBackground_label;
 
 	public static String AddMemoryBlockAction_title;
@@ -68,6 +74,20 @@ public class Messages extends NLS {
 	public static String TabConfig_registerlist_button_Variables_text;
 	public static String TabConfig_registerlist_path_text;
 
+	public static String TabConfig_hwbp_group_text;
+	public static String TabConfig_hwbplimit_label_text;
+	public static String TabConfig_hwbplimit_actual_text;
+	
+	public static String TabConfig_hwbplimit_links_1;
+	public static String TabConfig_hwbplimit_links_2;
+	public static String TabConfig_hwbplimit_links_3;
+	public static String TabConfig_hwbplimit_links_4;
+	public static String TabConfig_hwbplimit_error;
+	public static String TabConfig_hwbplimit_default;
+	
+	public static String HwBreakpointLimitUnlimited;
+	public static String HwBreakpointLimitNone;
+	
 	static {
 		// initialise above static strings
 		NLS.initializeMessages(MESSAGES, Messages.class);
