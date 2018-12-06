@@ -14,12 +14,6 @@
 
 package ilg.gnumcueclipse.debug.gdbjtag.openocd.ui;
 
-import ilg.gnumcueclipse.debug.gdbjtag.DebugUtils;
-import ilg.gnumcueclipse.debug.gdbjtag.openocd.Activator;
-import ilg.gnumcueclipse.debug.gdbjtag.openocd.ConfigurationAttributes;
-import ilg.gnumcueclipse.debug.gdbjtag.openocd.preferences.DefaultPreferences;
-import ilg.gnumcueclipse.debug.gdbjtag.openocd.preferences.PersistentPreferences;
-
 import java.io.File;
 
 import org.eclipse.cdt.debug.core.CDebugUtils;
@@ -58,6 +52,12 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 
+import ilg.gnumcueclipse.debug.gdbjtag.DebugUtils;
+import ilg.gnumcueclipse.debug.gdbjtag.openocd.Activator;
+import ilg.gnumcueclipse.debug.gdbjtag.openocd.ConfigurationAttributes;
+import ilg.gnumcueclipse.debug.gdbjtag.openocd.preferences.DefaultPreferences;
+import ilg.gnumcueclipse.debug.gdbjtag.openocd.preferences.PersistentPreferences;
+
 public class TabStartup extends AbstractLaunchConfigurationTab {
 
 	// ------------------------------------------------------------------------
@@ -79,7 +79,10 @@ public class TabStartup extends AbstractLaunchConfigurationTab {
 	private Text fSecondResetType;
 	private Label fSecondResetWarning;
 
-	private Button fEnableSemihosting;
+	/***
+	 * Commented out for FSTU-47
+	 * private Button fEnableSemihosting;
+	 */
 
 	private Button fLoadExecutable;
 	private Text fImageFileName;
@@ -262,6 +265,8 @@ public class TabStartup extends AbstractLaunchConfigurationTab {
 			fInitCommands.setLayoutData(gd);
 		}
 
+/***
+ * Commented out for FSTU-47
 		{
 			Composite local = new Composite(comp, SWT.NONE);
 			GridLayout layout = new GridLayout();
@@ -275,6 +280,8 @@ public class TabStartup extends AbstractLaunchConfigurationTab {
 			fEnableSemihosting.setText(Messages.getString("StartupTab.enableSemihosting_Text"));
 			fEnableSemihosting.setToolTipText(Messages.getString("StartupTab.enableSemihosting_ToolTipText"));
 		}
+ */
+
 
 		// Actions
 		fDoFirstReset.addSelectionListener(new SelectionAdapter() {
@@ -297,12 +304,15 @@ public class TabStartup extends AbstractLaunchConfigurationTab {
 
 		fInitCommands.addModifyListener(scheduleUpdateJobModifyListener);
 
+/***
+ * Commented out for FSTU-47
 		fEnableSemihosting.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				scheduleUpdateJob();
 			}
 		});
+***/
 	}
 
 	private void doFirstResetChanged() {
@@ -882,10 +892,13 @@ public class TabStartup extends AbstractLaunchConfigurationTab {
 				fFirstResetType
 						.setText(configuration.getAttribute(ConfigurationAttributes.FIRST_RESET_TYPE, stringDefault));
 
+				/***
+				 * Commented out for FSTU-47
 				// Enable semihosting
 				booleanDefault = fPersistentPreferences.getOpenOCDEnableSemihosting();
 				fEnableSemihosting.setSelection(
 						configuration.getAttribute(ConfigurationAttributes.ENABLE_SEMIHOSTING, booleanDefault));
+				 */
 
 				// Other commands
 				stringDefault = fPersistentPreferences.getOpenOCDInitOther();
@@ -1008,9 +1021,12 @@ public class TabStartup extends AbstractLaunchConfigurationTab {
 			// Reset type
 			fFirstResetType.setText(DefaultPreferences.FIRST_RESET_TYPE_DEFAULT);
 
+/***
+ * Commented out for FSTU-47
 			// Enable semihosting
 			fEnableSemihosting.setSelection(DefaultPreferences.ENABLE_SEMIHOSTING_DEFAULT);
-
+*
+*/
 			// Other commands
 			fInitCommands.setText(DefaultPreferences.OTHER_INIT_COMMANDS_DEFAULT);
 		}
@@ -1114,10 +1130,13 @@ public class TabStartup extends AbstractLaunchConfigurationTab {
 			configuration.setAttribute(ConfigurationAttributes.OTHER_INIT_COMMANDS, stringValue);
 			fPersistentPreferences.putOpenOCDInitOther(stringValue);
 
+/***
+ * Commented out for FSTU-47
 			// Enable semihosting
 			booleanValue = fEnableSemihosting.getSelection();
-			configuration.setAttribute(ConfigurationAttributes.ENABLE_SEMIHOSTING, booleanValue);
+			configuration.setAttribute(ConfigurationAttributes.ENABLE_SEMIHOSTING, false);
 			fPersistentPreferences.putOpenOCDEnableSemihosting(booleanValue);
+ */
 		}
 
 		// Load Symbols & Image...
