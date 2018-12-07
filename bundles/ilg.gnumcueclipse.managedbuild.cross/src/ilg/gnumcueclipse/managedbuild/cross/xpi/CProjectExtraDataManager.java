@@ -14,9 +14,7 @@ package ilg.gnumcueclipse.managedbuild.cross.xpi;
 import java.util.Map;
 
 import org.eclipse.cdt.managedbuilder.core.IConfiguration;
-import org.eclipse.core.runtime.CoreException;
 
-import ilg.gnumcueclipse.core.CProjectPacksStorage;
 import ilg.gnumcueclipse.debug.core.data.ICProjectExtraDataManager;
 import ilg.gnumcueclipse.managedbuild.cross.Activator;
 
@@ -48,12 +46,13 @@ public class CProjectExtraDataManager implements ICProjectExtraDataManager {
 	@Override
 	public Map<String, String> getExtraProperties(IConfiguration config) {
 
-		try {
-			CProjectPacksStorage storage = new CProjectPacksStorage(config);
-			return storage.getOptions();
-		} catch (CoreException e) {
-			;
-		}
+//		*** We do not support packs in Freedom Studio ***
+//		try {
+//			CProjectPacksStorage storage = new CProjectPacksStorage(config);
+//			return storage.getOptions();
+//		} catch (CoreException e) {
+//			;
+//		}
 		return null; // No extra properties
 	}
 
