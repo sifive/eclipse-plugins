@@ -26,6 +26,13 @@
          unpack="false"/>
 
    <plugin
+         id="ilg.gnumcueclipse.packs.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="ilg.gnumcueclipse.core"
          download-size="0"
          install-size="0"
@@ -41,6 +48,13 @@
 
    <plugin
          id="ilg.gnumcueclipse.managedbuild.cross"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ilg.gnumcueclipse.packs.data"
          download-size="0"
          install-size="0"
          version="0.0.0"
