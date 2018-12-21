@@ -54,7 +54,7 @@
          unpack="false"/>
 
    <plugin
-         id="ilg.gnumcueclipse.managedbuild.packs"
+         id="ilg.gnumcueclipse.packs.data"
          download-size="0"
          install-size="0"
          version="0.0.0"
