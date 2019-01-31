@@ -19,9 +19,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ilg.gnumcueclipse.core.preferences.ScopedPreferenceStoreWithoutDefaults;
-import ilg.gnumcueclipse.core.ui.XpackDirectoryNotStrictFieldEditor;
+import ilg.gnumcueclipse.core.ui.DirectoryNotStrictFieldEditor;
 import ilg.gnumcueclipse.debug.gdbjtag.qemu.Activator;
-import ilg.gnumcueclipse.debug.gdbjtag.qemu.preferences.DefaultPreferences;
 import ilg.gnumcueclipse.debug.gdbjtag.qemu.preferences.PersistentPreferences;
 import ilg.gnumcueclipse.debug.gdbjtag.qemu.ui.Messages;
 
@@ -43,7 +42,7 @@ public class WorkspaceMcuPage extends FieldEditorPreferencePage implements IWork
 	// ------------------------------------------------------------------------
 
 	private PersistentPreferences fPersistentPreferences;
-	private DefaultPreferences fDefaultPreferences;
+//	private DefaultPreferences fDefaultPreferences;
 
 	// ------------------------------------------------------------------------
 
@@ -51,7 +50,7 @@ public class WorkspaceMcuPage extends FieldEditorPreferencePage implements IWork
 		super(GRID);
 
 		fPersistentPreferences = Activator.getInstance().getPersistentPreferences();
-		fDefaultPreferences = Activator.getInstance().getDefaultPreferences();
+//		fDefaultPreferences = Activator.getInstance().getDefaultPreferences();
 
 		setPreferenceStore(new ScopedPreferenceStoreWithoutDefaults(InstanceScope.INSTANCE, Activator.PLUGIN_ID));
 
@@ -83,9 +82,9 @@ public class WorkspaceMcuPage extends FieldEditorPreferencePage implements IWork
 
 		boolean isStrict = fPersistentPreferences.getFolderStrict();
 
-		String xpackName = fDefaultPreferences.getXpackName();
+//		String xpackName = fDefaultPreferences.getXpackName();
 
-		FieldEditor folder = new XpackDirectoryNotStrictFieldEditor(xpackName, PersistentPreferences.INSTALL_FOLDER,
+		FieldEditor folder = new DirectoryNotStrictFieldEditor(PersistentPreferences.INSTALL_FOLDER,
 				Messages.McuPage_executable_folder, getFieldEditorParent(), isStrict);
 		addField(folder);
 	}

@@ -19,11 +19,10 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
-import ilg.gnumcueclipse.core.ui.XpackDirectoryNotStrictFieldEditor;
+import ilg.gnumcueclipse.core.ui.DirectoryNotStrictFieldEditor;
 import ilg.gnumcueclipse.debug.gdbjtag.jlink.Activator;
 import ilg.gnumcueclipse.debug.gdbjtag.jlink.preferences.PersistentPreferences;
 import ilg.gnumcueclipse.debug.gdbjtag.jlink.ui.Messages;
-import ilg.gnumcueclipse.debug.gdbjtag.jlink.preferences.DefaultPreferences;
 
 /**
  * This class represents a preference page that is contributed to the
@@ -43,7 +42,7 @@ public class GlobalMcuPage extends FieldEditorPreferencePage implements IWorkben
 	// ------------------------------------------------------------------------
 
 	private PersistentPreferences fPersistentPreferences;
-	private DefaultPreferences fDefaultPreferences;
+//	private DefaultPreferences fDefaultPreferences;
 
 	// ------------------------------------------------------------------------
 
@@ -55,7 +54,7 @@ public class GlobalMcuPage extends FieldEditorPreferencePage implements IWorkben
 		}
 
 		fPersistentPreferences = Activator.getInstance().getPersistentPreferences();
-		fDefaultPreferences = Activator.getInstance().getDefaultPreferences();
+//		fDefaultPreferences = Activator.getInstance().getDefaultPreferences();
 
 		// Explicit use of the workspace preferences.
 		setPreferenceStore(new ScopedPreferenceStore(ConfigurationScope.INSTANCE, Activator.PLUGIN_ID));
@@ -88,9 +87,9 @@ public class GlobalMcuPage extends FieldEditorPreferencePage implements IWorkben
 
 		boolean isStrict = fPersistentPreferences.getFolderStrict();
 
-		String xpackName = fDefaultPreferences.getXpackName();
+//		String xpackName = fDefaultPreferences.getXpackName();
 
-		FieldEditor folder = new XpackDirectoryNotStrictFieldEditor(xpackName, PersistentPreferences.INSTALL_FOLDER,
+		FieldEditor folder = new DirectoryNotStrictFieldEditor(PersistentPreferences.INSTALL_FOLDER,
 				Messages.McuPage_executable_folder, getFieldEditorParent(), isStrict);
 		addField(folder);
 	}
